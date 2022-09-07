@@ -24,12 +24,12 @@ describe('api/topics', () => {
         expect(result.body.topics.length).toBe(3);
         })
     })   
-    it('should respond with 404 if items not found', () => {
+    it('should generate 404 if items not found', () => {
         return request(app)
         .get('/api/pictures')
         .expect(404)
         .then((result) => {
-        expect(result.status).toBe(404);
+        expect(result.body).toEqual({ message: 'Item not found' });
         }) 
     })  
 })
