@@ -15,8 +15,13 @@ const getArticles = (req, res, next) => {
 const getArticleId = (req, res, next) => {
     const { article_id } = req.params;
     returnArticleId( article_id ).then((article) => {
-        console.log(article)
+    if (article === undefined) {
+        return Promise.reject({status: 404, message: 'Item not found'})
+    }
         res.send({article});
     })
+    .catch( (err) => {
+        console.log(err)
+        next(err)})
 }
 module.exports = { getTopics, getArticles, getArticleId };
