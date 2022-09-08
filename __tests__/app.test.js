@@ -76,7 +76,6 @@ describe('api/articles/:article_id', () => {
         .get('/api/articles/20')
         .expect(404)
         .then((result) => {
-        console.log(result.body, '<- result.body')
         expect(result.body).toEqual({ message: 'Item not found' });
         })
     }) 

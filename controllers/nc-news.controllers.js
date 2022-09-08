@@ -21,7 +21,6 @@ const getArticleId = (req, res, next) => {
         res.send({article});
     })
     .catch( (err) => {
-        console.log(err)
         next(err)})
 }
 module.exports = { getTopics, getArticles, getArticleId };
