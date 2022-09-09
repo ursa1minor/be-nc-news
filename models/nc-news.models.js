@@ -1,5 +1,4 @@
 const db = require('../db/connection');
-const format = require('pg-format');
 
 const returnTopics = () => {
     return db.query('SELECT * FROM topics')
@@ -23,4 +22,11 @@ const returnArticleId = (article_id) => {
     })
 }
 
-module.exports = { returnTopics, returnArticles, returnArticleId };
+const returnUsers = () => {
+    return db.query (`SELECT * FROM users`)
+    .then((res) => {
+        return res.rows;
+    })
+}
+
+module.exports = { returnTopics, returnArticles, returnArticleId, returnUsers };

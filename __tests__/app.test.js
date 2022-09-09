@@ -26,7 +26,7 @@ describe('api/topics', () => {
     })   
     it('should generate 404 if items not found', () => {
         return request(app)
-        .get('/api/pictures')
+        .get('/api/notTopics')
         .expect(404)
         .then((result) => {
         expect(result.body).toEqual({ message: 'Item not found' });
@@ -88,3 +88,26 @@ describe('api/articles/:article_id', () => {
    
     })
 })
+
+describe('api/users', () => {
+    it('should return array of users with properties username, name and avatar_url', () => {
+        return request(app)
+        .get('/api/users')
+        .expect(200)
+        .then((result) => {
+            expect(Array.isArray(result.body.users)).toBe(true);  
+            expect(result.body.users[0]).toHaveProperty('username');
+            expect(result.body.users[0]).toHaveProperty('name');
+            expect(result.body.users[0]).toHaveProperty('avatar_url');
+        })
+    })
+    it('should generate 404 if items not found', () => {
+        return request(app)
+        .get('/api/notUsers')
+        .expect(404)
+        .then((result) => {
+        expect(result.body).toEqual({ message: 'Item not found' });
+        }) 
+    })  
+})
+
