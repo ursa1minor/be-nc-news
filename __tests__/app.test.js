@@ -133,6 +133,24 @@ describe('PATCH api/articles/:article_id', () => {
             expect(result.body.article.votes).toBe(90)
             })
         })
+    it('should update the article vote property by given amount and return the updated article', () => {
+        const testInput = {inc_votes: -10}
+        return request(app)
+        .patch('/api/articles/1')
+        .send(testInput)
+        .expect(200)
+        .then((result) => {
+            expect(result.body.article).toEqual({
+                article_id: 1,
+                title: "Living in the shadow of a great man",
+                topic: "mitch",
+                author: "butter_bridge",
+                body: "I find this existence challenging",
+                created_at: expect.any(String),
+                votes: 90
+                })
+            })
+    })
     it('should generate 404 if items not found', () => {
         return request(app)
         .patch('/api/articles/20')
