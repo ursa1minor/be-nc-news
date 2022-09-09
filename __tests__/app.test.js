@@ -111,3 +111,33 @@ describe('api/users', () => {
     })  
 })
 
+describe('PATCH api/articles/:article_id', () => {
+    it('should update the article vote property by given amount', () => {
+        const testInput = {inc_votes: 10}
+        return request(app)
+        .patch('/api/articles/1')
+        .send(testInput)
+        .expect(200)
+        .then((result) => {
+            expect(result.body.article.votes).toBe(110)
+            })
+        })
+    })
+    it('should generate 404 if items not found', () => {
+        return request(app)
+        .patch('/api/articles/20')
+        .expect(404)
+        .then((result) => {
+        expect(result.body).toEqual({ message: 'Item not found' });
+        })
+    }) 
+    it('should generate 400 if user has made a bad request', () => {
+        return request(app)
+        .patch('/api/articles/fridge')
+        .expect(400)
+        .then ((result) => {
+        expect(result.body).toEqual({message: 'Bad request'})
+   
+    })
+})
+
