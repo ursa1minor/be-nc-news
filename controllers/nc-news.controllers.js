@@ -1,4 +1,4 @@
-const { returnTopics, returnArticles, returnArticleId } = require ('../models/nc-news.models.js');
+const { returnTopics, returnArticles, returnArticleId, returnUsers } = require ('../models/nc-news.models.js');
 
 const getTopics = (req, res, next) => {
     returnTopics().then((topics) => {
@@ -23,4 +23,12 @@ const getArticleId = (req, res, next) => {
     .catch( (err) => {
         next(err)})
 }
-module.exports = { getTopics, getArticles, getArticleId };
+
+const getUsers = (req, res, next) => {
+    returnUsers().then((users) => {
+        res.status(200).send({users});
+    })
+}
+
+
+module.exports = { getTopics, getArticles, getArticleId, getUsers };

@@ -22,4 +22,11 @@ const returnArticleId = (article_id) => {
     })
 }
 
-module.exports = { returnTopics, returnArticles, returnArticleId };
+const returnUsers = () => {
+    return db.query (`SELECT * FROM users`)
+    .then((res) => {
+        return res.rows;
+    })
+}
+
+module.exports = { returnTopics, returnArticles, returnArticleId, returnUsers };

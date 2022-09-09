@@ -1,6 +1,6 @@
 const express = require("express");
 
-const { getTopics, getArticles, getArticleId } = require('./controllers/nc-news.controllers.js');
+const { getTopics, getArticles, getArticleId, getUsers } = require('./controllers/nc-news.controllers.js');
 
 const app = express();
 
@@ -11,6 +11,8 @@ app.get('/api/topics', getTopics);
 app.get('/api/articles', getArticles);
 
 app.get(`/api/articles/:article_id`, getArticleId);
+
+app.get('/api/users', getUsers);
 
 app.all('/*', (req, res, next) => {
     res.status(404).send({message: 'Item not found'})
