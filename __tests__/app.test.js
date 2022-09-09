@@ -126,11 +126,21 @@ describe('PATCH api/articles/:article_id', () => {
     it('should update the article vote property by given amount which is a negative number', () => {
         const testInput = {inc_votes: -10}
         return request(app)
-        .patch('/api/articles/1')
+        .patch('/api/articles/2')
         .send(testInput)
         .expect(200)
         .then((result) => {
-            expect(result.body.article.votes).toBe(90)
+            expect(result.body.article.votes).toBe(-10)
+            })
+        })
+    it('should not update the article vote property if the votecount passed in is 0', () => {
+        const testInput = {inc_votes: 0}
+        return request(app)
+        .patch('/api/articles/3')
+        .send(testInput)
+        .expect(200)
+        .then((result) => {
+            expect(result.body.article.votes).toBe(0)
             })
         })
     it('should update the article vote property by given amount and return the updated article', () => {
@@ -164,8 +174,29 @@ describe('PATCH api/articles/:article_id', () => {
         .patch('/api/articles/fridge')
         .expect(400)
         .then ((result) => {
-        expect(result.body).toEqual({message: 'Bad request'})
-   
+        expect(result.body).toEqual({message: 'Bad request'})  
+        })
     })
-})
+    it('should generate 400 if vote object does not contain a number', () => {
+        const testInput = {inc_votes: 'hello'}
+        return request(app)
+        .patch('/api/articles/5')
+        .send(testInput)
+        .expect(400)
+        .then((result) => {
+            expect(result.body).toEqual({message: 'Bad request'})
+        })
+    })
+    it('should generate 400 if vote object does not contain a key of inc_vote', () => {
+        const testInput = {votes: 5}
+        return request(app)
+        .patch('/api/articles/6')
+        .send(testInput)
+        .expect(400)
+        .then((result) => {
+            expect(result.body).toEqual({message: 'Bad request'})
+        })
+    })
+
+
 
