@@ -1,6 +1,6 @@
 const express = require("express");
 
-const { getTopics, getArticles, getArticleId, getUsers } = require('./controllers/nc-news.controllers.js');
+const { getTopics, getArticles, getArticleId, getUsers, patchArticleId } = require('./controllers/nc-news.controllers.js');
 
 const app = express();
 
@@ -13,6 +13,8 @@ app.get('/api/articles', getArticles);
 app.get(`/api/articles/:article_id`, getArticleId);
 
 app.get('/api/users', getUsers);
+
+app.patch('/api/articles/:article_id', patchArticleId);
 
 app.all('/*', (req, res, next) => {
     res.status(404).send({message: 'Item not found'})
@@ -37,9 +39,17 @@ app.use((err, req, res, next) => {
 })
 
 app.use((err, req, res, next) => {
+    if (err.code === '23502') {
+        res.status(400).send({
+            message: 'Bad request'
+        })
+    } else {
+        next(err)
+    }
+})
+
+app.use((err, req, res, next) => {
     res.status(500).send({ message: 'Internal Server Error'});
 })
 
-
 module.exports = app;
-

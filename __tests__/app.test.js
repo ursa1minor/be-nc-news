@@ -111,3 +111,92 @@ describe('api/users', () => {
     })  
 })
 
+describe('PATCH api/articles/:article_id', () => {
+    it('should update the article vote property by given amount which is a positive number', () => {
+        const testInput = {inc_votes: 10}
+        return request(app)
+        .patch('/api/articles/1')
+        .send(testInput)
+        .expect(200)
+        .then((result) => {
+            expect(result.body.article.votes).toBe(110)
+            })
+        })
+    })
+    it('should update the article vote property by given amount which is a negative number', () => {
+        const testInput = {inc_votes: -10}
+        return request(app)
+        .patch('/api/articles/2')
+        .send(testInput)
+        .expect(200)
+        .then((result) => {
+            expect(result.body.article.votes).toBe(-10)
+            })
+        })
+    it('should not update the article vote property if the votecount passed in is 0', () => {
+        const testInput = {inc_votes: 0}
+        return request(app)
+        .patch('/api/articles/3')
+        .send(testInput)
+        .expect(200)
+        .then((result) => {
+            expect(result.body.article.votes).toBe(0)
+            })
+        })
+    it('should update the article vote property by given amount and return the updated article', () => {
+        const testInput = {inc_votes: -10}
+        return request(app)
+        .patch('/api/articles/1')
+        .send(testInput)
+        .expect(200)
+        .then((result) => {
+            expect(result.body.article).toEqual({
+                article_id: 1,
+                title: "Living in the shadow of a great man",
+                topic: "mitch",
+                author: "butter_bridge",
+                body: "I find this existence challenging",
+                created_at: expect.any(String),
+                votes: 90
+                })
+            })
+    })
+    it('should generate 404 if items not found', () => {
+        return request(app)
+        .patch('/api/articles/20')
+        .expect(404)
+        .then((result) => {
+        expect(result.body).toEqual({ message: 'Item not found' });
+        })
+    }) 
+    it('should generate 400 if user has made a bad request', () => {
+        return request(app)
+        .patch('/api/articles/fridge')
+        .expect(400)
+        .then ((result) => {
+        expect(result.body).toEqual({message: 'Bad request'})  
+        })
+    })
+    it('should generate 400 if vote object does not contain a number', () => {
+        const testInput = {inc_votes: 'hello'}
+        return request(app)
+        .patch('/api/articles/5')
+        .send(testInput)
+        .expect(400)
+        .then((result) => {
+            expect(result.body).toEqual({message: 'Bad request'})
+        })
+    })
+    it('should generate 400 if vote object does not contain a key of inc_vote', () => {
+        const testInput = {votes: 5}
+        return request(app)
+        .patch('/api/articles/6')
+        .send(testInput)
+        .expect(400)
+        .then((result) => {
+            expect(result.body).toEqual({message: 'Bad request'})
+        })
+    })
+
+
+
