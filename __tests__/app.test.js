@@ -112,7 +112,7 @@ describe('api/users', () => {
 })
 
 describe('PATCH api/articles/:article_id', () => {
-    it('should update the article vote property by given amount', () => {
+    it('should update the article vote property by given amount which is a positive number', () => {
         const testInput = {inc_votes: 10}
         return request(app)
         .patch('/api/articles/1')
@@ -123,6 +123,16 @@ describe('PATCH api/articles/:article_id', () => {
             })
         })
     })
+    it('should update the article vote property by given amount which is a negative number', () => {
+        const testInput = {inc_votes: -10}
+        return request(app)
+        .patch('/api/articles/1')
+        .send(testInput)
+        .expect(200)
+        .then((result) => {
+            expect(result.body.article.votes).toBe(90)
+            })
+        })
     it('should generate 404 if items not found', () => {
         return request(app)
         .patch('/api/articles/20')
