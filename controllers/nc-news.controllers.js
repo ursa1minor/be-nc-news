@@ -15,6 +15,8 @@ const getArticles = (req, res, next) => {
 const getArticleId = (req, res, next) => {
     const { article_id } = req.params;
     returnArticleId( article_id ).then((article) => {
+        console.log(article, '<- article')
+        console.log(article_id, '<- article_id')
     if (article === undefined) {
         return Promise.reject({status: 404, message: 'Item not found'})
     }

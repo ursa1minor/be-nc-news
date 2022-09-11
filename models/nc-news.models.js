@@ -16,8 +16,11 @@ const returnArticles = () => {
 
 const returnArticleId = (article_id) => {
     return db.query(`
-        SELECT * FROM articles WHERE article_id = $1`, [article_id])
+        SELECT articles.article_id, articles.author, articles.title, articles.topic, articles.body, articles.created_at, articles.votes FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id WHERE comments.article_id = $1`, [article_id])
     .then((result) => {
+        if (result.rows.length > 0) {
+        result.rows[0].comment_count = result.rows.length;}
+        console.log(result.rows, '<- result.rows in the model')
         return result.rows[0];
     })
 }
