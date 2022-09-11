@@ -1,6 +1,6 @@
 const express = require("express");
 
-const { getTopics, getArticles, getArticleId, getUsers, patchArticleId } = require('./controllers/nc-news.controllers.js');
+const { getTopics, getArticles, getArticleId, getUsers, patchArticleId, getComments, getCommentCount } = require('./controllers/nc-news.controllers.js');
 
 const app = express();
 
@@ -13,6 +13,10 @@ app.get('/api/articles', getArticles);
 app.get(`/api/articles/:article_id`, getArticleId);
 
 app.get('/api/users', getUsers);
+
+app.get('/api/comments', getComments);
+
+app.get('/api/comments/:article_id', getCommentCount);
 
 app.patch('/api/articles/:article_id', patchArticleId);
 
