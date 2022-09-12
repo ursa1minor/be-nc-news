@@ -66,7 +66,7 @@ describe('getArticleId api/articles/:article_id', () => {
                 body: "I find this existence challenging",
                 created_at: expect.any(String),
                 votes: 100,
-                count: 11
+                comment_count: 11
               })
             })
         })
@@ -77,9 +77,9 @@ describe('getArticleId api/articles/:article_id', () => {
         .expect(200)
         .then((result) => {
             expect(result.body.article).toHaveProperty('article_id');
-            expect(result.body.article).toHaveProperty('count');
+            expect(result.body.article).toHaveProperty('comment_count');
             expect(result.body.article.article_id).toBe(2);
-            expect(result.body.article.count).toBe(0);
+            expect(result.body.article.comment_count).toBe(0);
          })
     })
        
