@@ -19,9 +19,8 @@ const returnArticles = () => {
 
 const returnArticleId = (article_id) => {
     return db.query(
-        `SELECT articles.article_id, articles.author, articles.title, articles.topic, articles.body, articles.created_at, articles.votes FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id WHERE articles.article_id = $1`, [article_id])
+        `SELECT articles.article_id, articles.author, articles.title, articles.topic, articles.body, articles.created_at, articles.votes, COUNT (comments.article_id)::INT FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id WHERE articles.article_id = $1 GROUP BY articles.article_id`, [article_id])
     .then((result) => {
-        console.log(result.rows[0])
         const article = result.rows[0]
 
         if (article === undefined) {
@@ -29,25 +28,7 @@ const returnArticleId = (article_id) => {
                 status: 404, message: 'Item not found'
             })
         } 
-        article.comment_count = 0;
         return article;
-    })
-}
-
-const returnComments = () => {
-    return db.query(`SELECT * FROM comments`)
-    .then((result) => {
-        const comments = result.rows;
-        return comments;
-    })
-}
-
-const returnCommentCount = (article_id) => {
-    return db.query(`SELECT * FROM comments WHERE article_id = $1`, [article_id])
-    .then((result) => {
-        console.log(result.rows[0], '<- ')
-        const comments = result.rows;
-        return comments.length;
     })
 }
 
@@ -70,4 +51,4 @@ const updateArticleId = (article_id, voteChange) => {
     })
 }
 
-module.exports = { returnTopics, returnArticles, returnArticleId, returnUsers, updateArticleId, returnComments, returnCommentCount };
+module.exports = { returnTopics, returnArticles, returnArticleId, returnUsers, updateArticleId };

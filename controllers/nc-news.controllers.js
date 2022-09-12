@@ -1,4 +1,4 @@
-const { returnTopics, returnArticles, returnArticleId, returnUsers, updateArticleId, returnComments, returnCommentCount } = require ('../models/nc-news.models.js');
+const { returnTopics, returnArticles, returnArticleId, returnUsers, updateArticleId } = require ('../models/nc-news.models.js');
 
 const getTopics = (req, res, next) => {
     returnTopics().then((topics) => {
@@ -28,21 +28,6 @@ const getUsers = (req, res, next) => {
     })
 }
 
-const getComments = (req, res, next) => {
-    returnComments().then((comments) => {
-        res.status(200).send({comments});
-    })
-}
-
-const getCommentCount = (req, res, next) => {
-    const article_id = req.params.article_id;
-
-    returnCommentCount( article_id ).then((comments) => {
-        res.status(200).send({comments});
-    })
-}
-
-
 const patchArticleId = (req, res, next) => {
     const { inc_votes } = req.body
     const { article_id } = req.params;
@@ -56,4 +41,4 @@ const patchArticleId = (req, res, next) => {
         next(err)})
 }
 
-module.exports = { getTopics, getArticles, getArticleId, getUsers, patchArticleId, getComments, getCommentCount };
+module.exports = { getTopics, getArticles, getArticleId, getUsers, patchArticleId };

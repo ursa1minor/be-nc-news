@@ -52,81 +52,51 @@ describe('getArticles api/articles', () => {
     }) 
 })  
 
-// describe('getArticleId api/articles/:article_id', () => {
-//     it('should respond with 200 if object found with correct comment count', () => {
-//         return request(app)
-//         .get('/api/articles/1')
-//         .expect(200)
-//         .then((result) => {
-//             expect(result.body.article).toEqual({
-//                 article_id: 1,
-//                 title: "Living in the shadow of a great man",
-//                 topic: "mitch",
-//                 author: "butter_bridge",
-//                 body: "I find this existence challenging",
-//                 created_at: expect.any(String),
-//                 votes: 100,
-//                 comment_count: 11
-//               })
-//             })
-//         })
-//     })
-//     it('should respond with 200 if object found with comment count 0', () => {
-//         return request(app)
-//         .get('/api/articles/2')
-//         .expect(200)
-//         .then((result) => {
-//             expect(result.body.article).toHaveProperty('article_id');
-//             expect(result.body.article).toHaveProperty('comment_count');
-//             expect(result.body.article.article_id).toBe(2);
-//             expect(result.body.article.comment_count).toBe(0);
-//          })
-//     })
+describe('getArticleId api/articles/:article_id', () => {
+    it('should respond with 200 if object found with correct comment count', () => {
+        return request(app)
+        .get('/api/articles/1')
+        .expect(200)
+        .then((result) => {
+            expect(result.body.article).toEqual({
+                article_id: 1,
+                title: "Living in the shadow of a great man",
+                topic: "mitch",
+                author: "butter_bridge",
+                body: "I find this existence challenging",
+                created_at: expect.any(String),
+                votes: 100,
+                count: 11
+              })
+            })
+        })
+    })
+    it('should respond with 200 if object found with comment count 0', () => {
+        return request(app)
+        .get('/api/articles/2')
+        .expect(200)
+        .then((result) => {
+            expect(result.body.article).toHaveProperty('article_id');
+            expect(result.body.article).toHaveProperty('count');
+            expect(result.body.article.article_id).toBe(2);
+            expect(result.body.article.count).toBe(0);
+         })
+    })
        
-//     it('should generate 404 if items not found', () => {
-//         return request(app)
-//         .get('/api/articles/20')
-//         .expect(404)
-//         .then((result) => {
-//         expect(result.body).toEqual({ message: 'Item not found' });
-//         })
-//     }) 
-//     it('should generate 400 if user has made a bad request', () => {
-//         return request(app)
-//         .get('/api/articles/fridge')
-//         .expect(400)
-//         .then ((result) => {
-//         expect(result.body).toEqual({message: 'Bad request'}) 
-//     })
-// })
-
-describe('getComments /api/comments', () => {
-    it('should return array of comments', () => {
+    it('should generate 404 if items not found', () => {
         return request(app)
-        .get('/api/comments')
-        .expect(200)
+        .get('/api/articles/20')
+        .expect(404)
         .then((result) => {
-        expect(Array.isArray(result.body.comments)).toBe(true);
+        expect(result.body).toEqual({ message: 'Item not found' });
         })
-    })
-})
-
-describe('getCommentCount /api/comments/:article_id', () => {
-    it('should respond with 200 and number of comments', () => {
+    }) 
+    it('should generate 400 if user has made a bad request', () => {
         return request(app)
-        .get('/api/comments/2')
-        .expect(200)
-        .then((result) => {
-        expect(result.body.comments).toBe(0);   
-        })
-    })
-    it('should respond with 200 and number of comments', () => {
-        return request(app)
-        .get('/api/comments/1')
-        .expect(200)
-        .then((result) => {
-        expect(result.body.comments).toBe(11);   
-        })
+        .get('/api/articles/fridge')
+        .expect(400)
+        .then ((result) => {
+        expect(result.body).toEqual({message: 'Bad request'}) 
     })
 })
 
