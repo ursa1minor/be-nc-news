@@ -13,12 +13,10 @@ const getArticles = (req, res, next) => {
 }
 
 const getArticleId = (req, res, next) => {
-    const { article_id } = req.params;
+    const article_id = req.params.article_id;
+
     returnArticleId( article_id ).then((article) => {
-    if (article === undefined) {
-        return Promise.reject({status: 404, message: 'Item not found'})
-    }
-        res.send({article});
+    res.status(200).send({article});
     })
     .catch( (err) => {
         next(err)})

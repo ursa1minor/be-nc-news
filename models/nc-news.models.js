@@ -1,31 +1,42 @@
+const e = require('express');
 const db = require('../db/connection');
 
 const returnTopics = () => {
     return db.query('SELECT * FROM topics')
     .then((result) => {
-        return result.rows;
+        const topics = result.rows;
+        return topics;
     })
 }
 
 const returnArticles = () => {
     return db.query('SELECT * FROM articles')
     .then((result) => {
-        return result.rows;
+        const articles = result.rows;
+        return articles;
     })
 }
 
 const returnArticleId = (article_id) => {
-    return db.query(`
-        SELECT * FROM articles WHERE article_id = $1`, [article_id])
+    return db.query(
+        `SELECT articles.article_id, articles.author, articles.title, articles.topic, articles.body, articles.created_at, articles.votes, COUNT (comments.article_id)::INT FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id WHERE articles.article_id = $1 GROUP BY articles.article_id`, [article_id])
     .then((result) => {
-        return result.rows[0];
+        const article = result.rows[0]
+
+        if (article === undefined) {
+            return Promise.reject({
+                status: 404, message: 'Item not found'
+            })
+        } 
+        return article;
     })
 }
 
 const returnUsers = () => {
     return db.query (`SELECT * FROM users`)
     .then((result) => {
-        return result.rows;
+        const users = result.rows;
+        return users;
     })
 }
 

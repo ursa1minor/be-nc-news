@@ -12,7 +12,7 @@ afterAll(() => {
     return db.end();
 })
 
-describe('api/topics', () => {
+describe('getTopics api/topics', () => {
         it('should respond with 200 if array of objects with correct properties found', () => {
             return request(app)
             .get('/api/topics')
@@ -34,7 +34,7 @@ describe('api/topics', () => {
     })  
 })
 
-describe('api/articles', () => {
+describe('getArticles api/articles', () => {
     it('should respond with 200 if array of objects found', () => {
         return request(app)
         .get('/api/articles')
@@ -52,8 +52,8 @@ describe('api/articles', () => {
     }) 
 })  
 
-describe('api/articles/:article_id', () => {
-    it('should respond with 200 if array of objects found', () => {
+describe('getArticleId api/articles/:article_id', () => {
+    it('should respond with 200 if object found with correct comment count', () => {
         return request(app)
         .get('/api/articles/1')
         .expect(200)
@@ -65,12 +65,24 @@ describe('api/articles/:article_id', () => {
                 author: "butter_bridge",
                 body: "I find this existence challenging",
                 created_at: expect.any(String),
-                votes: 100
+                votes: 100,
+                count: 11
               })
             })
         })
     })
-
+    it('should respond with 200 if object found with comment count 0', () => {
+        return request(app)
+        .get('/api/articles/2')
+        .expect(200)
+        .then((result) => {
+            expect(result.body.article).toHaveProperty('article_id');
+            expect(result.body.article).toHaveProperty('count');
+            expect(result.body.article.article_id).toBe(2);
+            expect(result.body.article.count).toBe(0);
+         })
+    })
+       
     it('should generate 404 if items not found', () => {
         return request(app)
         .get('/api/articles/20')
@@ -84,13 +96,12 @@ describe('api/articles/:article_id', () => {
         .get('/api/articles/fridge')
         .expect(400)
         .then ((result) => {
-        expect(result.body).toEqual({message: 'Bad request'})
-   
+        expect(result.body).toEqual({message: 'Bad request'}) 
     })
 })
 
 describe('api/users', () => {
-    it('should return array of users with properties username, name and avatar_url', () => {
+    it('should return array of users', () => {
         return request(app)
         .get('/api/users')
         .expect(200)
