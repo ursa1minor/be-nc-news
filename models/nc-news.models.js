@@ -10,7 +10,8 @@ const returnTopics = () => {
 }
 
 const returnArticles = () => {
-    return db.query('SELECT * FROM articles')
+    return db.query(`
+    SELECT articles.article_id, articles.author, articles.title, articles.topic, articles.created_at, articles.votes, COUNT (comments.article_id)::INT AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id GROUP BY articles.article_id ORDER BY comment_count DESC`)
     .then((result) => {
         const articles = result.rows;
         return articles;

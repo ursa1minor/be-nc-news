@@ -35,7 +35,7 @@ describe('getTopics api/topics', () => {
 })
 
 describe('getArticles api/articles', () => {
-    it('should respond with 200 if array of objects found', () => {
+    it('should respond with 200 if array of objects found with properties title, topic, author, created_at, votes and comment_count, with comment_count in descending order', () => {
         return request(app)
         .get('/api/articles')
         .expect(200)
@@ -44,12 +44,21 @@ describe('getArticles api/articles', () => {
         expect(result.body.articles[0]).toHaveProperty('title');
         expect(result.body.articles[0]).toHaveProperty('topic');
         expect(result.body.articles[0]).toHaveProperty('author');
-        expect(result.body.articles[0]).toHaveProperty('body');
         expect(result.body.articles[0]).toHaveProperty('created_at');
         expect(result.body.articles[0]).toHaveProperty('votes');
+        expect(result.body.articles[0]).toHaveProperty('comment_count');
         expect(result.body.articles.length).toBe(12);
+        expect(result.body.articles).toBeSortedBy('comment_count', {descending: true})
         })
-    }) 
+    })
+    it('should generate 404 if items not found', () => {
+        return request(app)
+        .get('/api/notArticles')
+        .expect(404)
+        .then((result) => {
+        expect(result.body).toEqual({ message: 'Item not found' });
+        }) 
+    })         
 })  
 
 describe('getArticleId api/articles/:article_id', () => {
