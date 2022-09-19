@@ -11,25 +11,7 @@ exports.returnTopics = () => {
     });
 };
 
-exports.returnComments = () => {
-
-    let sqlQuery = `
-    SELECT
-        comment_id,
-        votes,
-        created_at,
-        author,
-        body    
-    FROM comments`;
-    return db.query(sqlQuery)
-        .then((result) => {
-            const comments = result.rows;
-    return comments;
-    });
-};
-
 exports.returnArticles = (topic) => {
-
     let sqlQuery = 
         `SELECT 
         COUNT (comments.article_id)::INT AS comment_count,
@@ -69,7 +51,6 @@ exports.returnArticles = (topic) => {
 };
 
 exports.returnArticleId = (article_id) => {
-
     let sqlQuery =  
         `SELECT 
             articles.article_id, 
@@ -99,6 +80,40 @@ exports.returnArticleId = (article_id) => {
     });
 };
 
+exports.returnComments = (article_id) => {
+
+    let sqlQuery = `
+        SELECT
+            comments.comment_id,
+            comments.votes,
+            comments.created_at,
+            comments.author,
+            comments.body,
+            articles.article_id    
+        FROM comments
+        RIGHT JOIN articles ON comments.article_id=articles.article_id
+        WHERE articles.article_id = $1`;
+
+    return db.query(sqlQuery, [article_id])
+        .then((result) => {
+            const comments = result.rows;
+        console.log(comments)
+
+    if (comments.length === 0) {
+            return Promise.reject({
+                status: 404, message: 'Article not found'
+            });
+        }
+    if (comments[0].comment_id === null) {
+        return Promise.reject({
+                status: 404, message: 'Comments not found'
+            });
+        }
+    
+    return comments;
+    })
+};
+
 exports.returnUsers = () => {
     let sqlQuery = `SELECT * FROM users`;
     return db.query (sqlQuery)
@@ -120,3 +135,5 @@ exports.updateArticleId = (article_id, voteChange) => {
     return article;
     });
 };
+
+

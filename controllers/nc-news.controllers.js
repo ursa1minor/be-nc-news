@@ -6,12 +6,6 @@ exports.getTopics = (req, res, next) => {
     })   
 }
 
-exports.getComments = (req, res, next) => {
-    returnComments().then((comments) => {
-        res.status(200).send({comments});
-    })
-}
-
 exports.getArticles = (req, res, next) => {
 	const topic = req.query;
    
@@ -32,7 +26,20 @@ exports.getArticleId = (req, res, next) => {
             res.status(200).send({article});
     })
     .catch( (err) => {
-        next(err)})
+        next(err)
+    })
+}
+
+exports.getComments = (req, res, next) => {
+    const article_id = req.params.article_id;
+    console.log(article_id, '<-')
+    returnComments( article_id )
+        .then((comments) => {
+           res.status(200).send({comments});
+    })
+    .catch( (err) => {
+        next(err)
+    })
 }
 
 exports.getUsers = (req, res, next) => {
