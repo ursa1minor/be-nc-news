@@ -11,6 +11,23 @@ exports.returnTopics = () => {
     });
 };
 
+exports.returnComments = () => {
+
+    let sqlQuery = `
+    SELECT
+        comment_id,
+        votes,
+        created_at,
+        author,
+        body    
+    FROM comments`;
+    return db.query(sqlQuery)
+        .then((result) => {
+            const comments = result.rows;
+    return comments;
+    });
+};
+
 exports.returnArticles = (topic) => {
 
     let sqlQuery = 
@@ -41,7 +58,6 @@ exports.returnArticles = (topic) => {
     return db.query(sqlQuery)
         .then((result) => {
             const articles = result.rows;
-            console.log(articles)
 
     if (articles.length === 0) {
         return Promise.reject({
