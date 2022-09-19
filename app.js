@@ -1,6 +1,6 @@
 const express = require("express");
 
-const { getTopics, getComments, getArticles, getArticleId, getUsers, patchArticleId } = require('./controllers/nc-news.controllers.js');
+const { getTopics, getComments, getArticles, getArticleId, getUsers, patchArticleId, postComment } = require('./controllers/nc-news.controllers.js');
 
 const app = express();
 
@@ -17,6 +17,8 @@ app.get('/api/articles/:article_id/comments', getComments);
 app.get('/api/users', getUsers);
 
 app.patch('/api/articles/:article_id', patchArticleId);
+
+app.post('/api/articles/:article_id/comments', postComment);
 
 // 404 table not found / id arg not found getComments
 app.all('/*', (req, res, next) => {
