@@ -34,31 +34,6 @@ describe('GET Topics: api/topics', () => {
     }); 
 });
 
-describe.only('GET Comments: api/comments', () => {
-    it('should respond with 200 if array of objects with correct properties found', () => {
-        return request(app)
-        .get('/api/comments')
-        .expect(200)
-        .then((result) => {
-    expect(Array.isArray(result.body.comments)).toBe(true);  
-    expect(result.body.comments[0]).toHaveProperty('comment_id');
-    expect(result.body.comments[0]).toHaveProperty('author');
-    expect(result.body.comments[0]).toHaveProperty('body');
-    expect(result.body.comments[0]).toHaveProperty('votes');
-    expect(result.body.comments[0]).toHaveProperty('created_at');
-    expect(result.body.comments.length).toBe(18);
-    });
-});  
-it('should generate 404 if items not found', () => {
-    return request(app)
-    .get('/api/notComments')
-    .expect(404)
-    .then((result) => {
-    expect(result.body).toEqual({ message: 'Item not found' });
-    }); 
-}); 
-});
-
 describe('GET Articles: api/articles', () => {
     it('should respond with 200 if array of article objects found with properties title, topic, author, created_at, votes and comment_count, with comment_count in descending order', () => {
         return request(app)
@@ -162,6 +137,45 @@ describe('GET ArticleId: api/articles/:article_id', () => {
         });
     });
 
+describe('GET Comments: /api/articles/:article_id/comments', () => {
+    it('should respond with 200 if comments found', () => {
+        return request(app)
+        .get('/api/articles/1/comments')
+        .expect(200)
+        .then((result) => {
+            expect(result.body.comments[0]).toHaveProperty('comment_id');
+            expect(result.body.comments[0]).toHaveProperty('author');
+            expect(result.body.comments[0]).toHaveProperty('body');
+            expect(result.body.comments[0]).toHaveProperty('created_at');
+            expect(result.body.comments[0]).toHaveProperty('votes');          
+        });
+    });
+    it('should generate 404 if no comments are found for existing article', () => {
+        return request(app)
+        .get('/api/articles/2/comments')
+        .expect(404)
+        .then((result) => {
+        expect(result.body).toEqual({ message: 'Comments not found' });
+        });
+    }); 
+    it('should generate 404 if article not found', () => {
+        return request(app)
+        .get('/api/articles/20/comments')
+        .expect(404)
+        .then((result) => {
+        expect(result.body).toEqual({ message: 'Article not found' });
+        });
+    });
+    it('should generate 404 if passed id which is not a number', () => {
+        return request(app)
+        .get('/api/articles/2/celery')
+        .expect(404)
+        .then ((result) => {
+            expect(result.body).toEqual({message: 'Item not found'}) 
+        });
+    })
+});
+
 describe('GET Users: api/users', () => {
     it('should return array of users', () => {
         return request(app)
@@ -183,6 +197,8 @@ describe('GET Users: api/users', () => {
         }); 
     });  
 });
+
+
 
 describe('PATCH article_id: api/articles/:article_id', () => {
     it('should update the article vote property by given amount which is a positive number', () => {
@@ -269,4 +285,5 @@ describe('PATCH article_id: api/articles/:article_id', () => {
         .then((result) => {
             expect(result.body).toEqual({message: 'Bad request'})
         });
-});
+    });
+ 
