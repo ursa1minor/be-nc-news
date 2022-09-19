@@ -1,54 +1,106 @@
 const e = require('express');
 const db = require('../db/connection');
 
-const returnTopics = () => {
-    return db.query('SELECT * FROM topics')
-    .then((result) => {
-        const topics = result.rows;
-        return topics;
-    })
-}
+exports.returnTopics = () => {
 
-const returnArticles = () => {
-    return db.query('SELECT * FROM articles')
-    .then((result) => {
-        const articles = result.rows;
-        return articles;
-    })
-}
+    let sqlQuery = `SELECT * FROM topics`;
+    return db.query(sqlQuery)
+        .then((result) => {
+            const topics = result.rows;
+    return topics;
+    });
+};
 
-const returnArticleId = (article_id) => {
-    return db.query(
-        `SELECT articles.article_id, articles.author, articles.title, articles.topic, articles.body, articles.created_at, articles.votes, COUNT (comments.article_id)::INT AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id WHERE articles.article_id = $1 GROUP BY articles.article_id`, [article_id])
-    .then((result) => {
-        const article = result.rows[0]
+exports.returnArticles = (topic) => {
+
+    let sqlQuery = 
+        `SELECT 
+        COUNT (comments.article_id)::INT AS comment_count,
+            articles.article_id, 
+            articles.author, 
+            articles.title, 
+            articles.topic, 
+            articles.created_at, 
+            articles.votes 
+        FROM articles 
+        LEFT JOIN comments 
+        ON articles.article_id = comments.article_id
+        `;
+
+    if (Object.keys(topic).length > 0) {
+        sqlQuery += 
+        `WHERE articles.topic = '${topic.topic}'
+        `;
+    }
+
+    sqlQuery += 
+		`GROUP BY articles.article_id
+		ORDER BY comment_count DESC;
+        `;
+
+    return db.query(sqlQuery)
+        .then((result) => {
+            const articles = result.rows;
+            console.log(articles)
+
+    if (articles.length === 0) {
+        return Promise.reject({
+            status: 404, message: 'Topic not found'
+            });
+        } else {
+        return articles;}
+    });
+};
+
+exports.returnArticleId = (article_id) => {
+
+    let sqlQuery =  
+        `SELECT 
+            articles.article_id, 
+            articles.author, 
+            articles.title, 
+            articles.topic, 
+            articles.body, 
+            articles.created_at, 
+            articles.votes, 
+            COUNT (comments.article_id)::INT AS comment_count 
+        FROM articles 
+        LEFT JOIN comments 
+        ON articles.article_id = comments.article_id
+        WHERE articles.article_id = $1 
+        GROUP BY articles.article_id`;
+    
+    return db.query(sqlQuery, [article_id])
+        .then((result) => {
+            const article = result.rows[0];
 
         if (article === undefined) {
             return Promise.reject({
-                status: 404, message: 'Item not found'
-            })
-        } 
-        return article;
-    })
-}
+                status: 404, message: 'Article not found'
+            });
+        };
+    return article;
+    });
+};
 
-const returnUsers = () => {
-    return db.query (`SELECT * FROM users`)
-    .then((result) => {
-        const users = result.rows;
-        return users;
-    })
-}
+exports.returnUsers = () => {
+    let sqlQuery = `SELECT * FROM users`;
+    return db.query (sqlQuery)
+        .then((result) => {
+            const users = result.rows;
+    return users;
+    });
+};
 
-const updateArticleId = (article_id, voteChange) => {
-    return db.query(`
-        UPDATE articles
+exports.updateArticleId = (article_id, voteChange) => {
+    let sqlQuery = 
+        `UPDATE articles
         SET votes = votes + $2      
         WHERE article_id = $1
-        RETURNING *;`, [article_id, voteChange])
-    .then(({rows}) => {
-        return rows[0];
-    })
-}
-
-module.exports = { returnTopics, returnArticles, returnArticleId, returnUsers, updateArticleId };
+        RETURNING *;`
+        return db.query(sqlQuery, [article_id, voteChange])
+            .then(({rows}) => {
+                const article = rows[0];
+    return article;
+    });
+};
