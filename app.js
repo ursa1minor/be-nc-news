@@ -16,10 +16,12 @@ app.get('/api/users', getUsers);
 
 app.patch('/api/articles/:article_id', patchArticleId);
 
+// 404 table not found 
 app.all('/*', (req, res, next) => {
     res.status(404).send({message: 'Item not found'})
 })
 
+// 404 item not found
 app.use((err, req, res, next) => {
     if (err.status && err.message) {
         res.status(err.status).send({ message: err.message})
@@ -28,6 +30,8 @@ app.use((err, req, res, next) => {
     }
 })
 
+// psql query errors: 
+// get article_id / patch article_id: number is not a number
 app.use((err, req, res, next) => {
     if (err.code === '22P02') {
         res.status(400).send({
@@ -38,6 +42,7 @@ app.use((err, req, res, next) => {
     }
 })
 
+// psql error: patch article_id: missing key
 app.use((err, req, res, next) => {
     if (err.code === '23502') {
         res.status(400).send({
@@ -48,8 +53,8 @@ app.use((err, req, res, next) => {
     }
 })
 
+// unhandled error
 app.use((err, req, res, next) => {
-    console.log(res.body)
     res.status(500).send({ message: 'Internal Server Error'});
 })
 
