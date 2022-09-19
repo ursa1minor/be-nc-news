@@ -1,4 +1,4 @@
-const { returnTopics, returnArticles, returnArticleId, returnUsers, updateArticleId } = require ('../models/nc-news.models.js');
+const { returnTopics, returnComments, returnArticles, returnArticleId, returnUsers, updateArticleId } = require ('../models/nc-news.models.js');
 
 exports.getTopics = (req, res, next) => {
     returnTopics().then((topics) => {
@@ -6,12 +6,17 @@ exports.getTopics = (req, res, next) => {
     })   
 }
 
+exports.getComments = (req, res, next) => {
+    returnComments().then((comments) => {
+        res.status(200).send({comments});
+    })
+}
+
 exports.getArticles = (req, res, next) => {
 	const topic = req.query;
    
 	returnArticles(topic)
 		.then((articles) => {
-            //console.log(topic)
 		    res.status(200).send({ articles });
 		})
 		.catch((err) => {
@@ -48,4 +53,3 @@ exports.patchArticleId = (req, res, next) => {
     .catch( (err) => {
         next(err)})
 }
-
