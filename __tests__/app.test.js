@@ -286,4 +286,54 @@ describe('PATCH article_id: api/articles/:article_id', () => {
             expect(result.body).toEqual({message: 'Bad request'})
         });
     });
+
+describe('POST /api/articles/:article_id/comments', () => {
+    it('should return status 201 and post a comment', () => {
+        return request(app)
+        .post("/api/articles/2/comments")
+        .send({ username: "butter_bridge", body: "Wow" })
+        .expect(201)
+        .then((result) => {
+            expect(result.body.newComment).toEqual({
+                comment_id: 19,
+                body: 'Wow',
+                article_id: 2,
+                author: 'butter_bridge',
+                votes: 0,
+                created_at: expect.any(String)})
+        })
+    });
+    it('should return status 400 if no comment included', () => {
+        return request(app)
+        .post("/api/articles/3/comments")
+        .send({ username: 'butter_bridge'})
+        .expect(400)
+        .then((result) => {
+            expect(result.body).toEqual({ message: 'Must include username and comment' })
+        })
+    });
+    it('should return status 400 if no username included', () => {
+        return request(app)
+        .post("/api/articles/3/comments")
+        .send({ body: 'Phew'})
+        .expect(400)
+        .then((result) => {
+            expect(result.body).toEqual({ message: 'Must include username and comment' })
+        })
+    });
+    it('should return status 422 if username not valid', () => {
+        return request(app)
+        .post("/api/articles/3/comments")
+        .send({ username: 'Albert', body: 'Phew'})
+        .expect(422)
+        .then((result) => {
+            expect(result.body).toEqual({ message: 'Username not found' })
+        })
+    });
+
+})
+
+
+
+
  

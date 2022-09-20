@@ -1,5 +1,6 @@
 const e = require('express');
 const db = require('../db/connection');
+const users = require('../db/data/test-data/users');
 
 exports.returnTopics = () => {
 
@@ -97,7 +98,6 @@ exports.returnComments = (article_id) => {
     return db.query(sqlQuery, [article_id])
         .then((result) => {
             const comments = result.rows;
-        console.log(comments)
 
     if (comments.length === 0) {
             return Promise.reject({
@@ -135,5 +135,42 @@ exports.updateArticleId = (article_id, voteChange) => {
     return article;
     });
 };
+
+exports.insertComment = ( article_id, username, body ) => {
+
+    if (!body || !username) {
+      return Promise.reject({
+        status: 400,
+        message: 'Must include username and comment',
+      })
+    }
+
+    return db.query(`SELECT username FROM users WHERE username=$1`, [username])
+    .then((result) => {
+        const users = result.rows;
+    if (users.length < 1) {
+        return Promise.reject({ status: 422, message: 'Username not found' });
+        }
+    })
+    .then(() => {
+        let sqlQuery =
+        `INSERT INTO comments
+        (article_id, author, body, votes)
+        VALUES ($1, $2, $3, 0)      
+        RETURNING *
+        `
+    return db.query(sqlQuery, [article_id, username, body])
+    })
+    .then((result) => {
+                const comment = result.rows[0];
+    return comment;
+    });
+};
+
+
+
+
+
+
 
 
