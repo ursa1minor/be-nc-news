@@ -321,15 +321,15 @@ describe('POST /api/articles/:article_id/comments', () => {
             expect(result.body).toEqual({ message: 'Must include username and comment' })
         })
     });
-    // it.only('should return status 422 if username not valid', () => {
-    //     return request(app)
-    //     .post("/api/articles/3/comments")
-    //     .send({ username: 'Albert', body: 'Phew'})
-    //     .expect(422)
-    //     .then((result) => {
-    //         expect(result.body).toEqual({ message: 'Invalid user' })
-    //     })
-    // });
+    it('should return status 422 if username not valid', () => {
+        return request(app)
+        .post("/api/articles/3/comments")
+        .send({ username: 'Albert', body: 'Phew'})
+        .expect(422)
+        .then((result) => {
+            expect(result.body).toEqual({ message: 'Username not found' })
+        })
+    });
 
 })
 
