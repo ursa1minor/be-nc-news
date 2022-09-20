@@ -7,9 +7,10 @@ exports.getTopics = (req, res, next) => {
 }
 
 exports.getArticles = (req, res, next) => {
-	const topic = req.query;
-   
-	returnArticles(topic)
+	//const topic = req.query;
+    const { sortby, order, topic } = req.query;
+    returnArticles(sortby, order, topic)
+	//returnArticles(topic)
 		.then((articles) => {
 		    res.status(200).send({ articles });
 		})

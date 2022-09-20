@@ -12,7 +12,18 @@ exports.returnTopics = () => {
     });
 };
 
-exports.returnArticles = (topic) => {
+exports.returnArticles = (
+    sortby = 'created_at', 
+    order = 'desc', 
+    topic) => 
+    {
+    const columns = ['title', 'author', 'created_at', 'topic', 'votes'];
+    if (!columns.includes(sortby)) {
+		return Promise.reject({ status: 400, message: 'Bad request' });
+	}
+    if (order !== 'asc' && order !== 'desc') {
+		order = 'desc';
+	}
     let sqlQuery = 
         `SELECT 
         COUNT (comments.article_id)::INT AS comment_count,
@@ -25,31 +36,24 @@ exports.returnArticles = (topic) => {
         FROM articles 
         LEFT JOIN comments 
         ON articles.article_id = comments.article_id
-        `;
-
-    if (Object.keys(topic).length > 0) {
-        sqlQuery += 
-        `WHERE articles.topic = '${topic.topic}'
-        `;
+        `
+    if (topic) {
+        sqlQuery +=
+        `WHERE articles.topic = '${topic}'
+        `
     }
 
-    sqlQuery += 
-		`GROUP BY articles.article_id
-		ORDER BY comment_count DESC;
+    sqlQuery +=    
+        `GROUP BY articles.article_id
+		ORDER BY ${sortby} ${order};
         `;
 
     return db.query(sqlQuery)
         .then((result) => {
             const articles = result.rows;
+        return articles;})
+}
 
-    if (articles.length === 0) {
-        return Promise.reject({
-            status: 404, message: 'Topic not found'
-            });
-        } else {
-        return articles;}
-    });
-};
 
 exports.returnArticleId = (article_id) => {
     let sqlQuery =  

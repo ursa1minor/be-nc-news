@@ -35,7 +35,7 @@ describe('GET Topics: api/topics', () => {
 });
 
 describe('GET Articles: api/articles', () => {
-    it('should respond with 200 if array of article objects found with properties title, topic, author, created_at, votes and comment_count, with comment_count in descending order', () => {
+    it.only('should respond with 200 if array of article objects found with properties title, topic, author, created_at, votes and comment_count, with created_at in descending order', () => {
         return request(app)
         .get('/api/articles')
         .expect(200)
@@ -48,45 +48,70 @@ describe('GET Articles: api/articles', () => {
         expect(result.body.articles[0]).toHaveProperty('votes');
         expect(result.body.articles[0]).toHaveProperty('comment_count');
         expect(result.body.articles.length).toBe(12);
-        expect(result.body.articles).toBeSortedBy('comment_count', {descending: true})
+        expect(result.body.articles).toBeSortedBy('created_at', {descending: true})
         });
     });
-    it('should generate 404 if articles not found', () => {
+    it.only('should generate 404 if articles not found', () => {
         return request(app)
         .get('/api/notArticles')
         .expect(404)
         .then((result) => {
         expect(result.body).toEqual({ message: 'Item not found' });
         });
-    });   
-    it('should respond with 200 and return articles from specified topic cats', () => {
+    }); 
+    it.only('should respond with 200 and array of ordered articles if passed single query: ascending order', () => {
+        return request(app)
+        .get('/api/articles?order=asc')
+        .expect(200)
+        .then((result) => {
+        expect(Array.isArray(result.body.articles)).toBe(true);  
+        expect(result.body.articles[0]).toHaveProperty('title');
+        expect(result.body.articles[0]).toHaveProperty('topic');
+        expect(result.body.articles[0]).toHaveProperty('author');
+        expect(result.body.articles[0]).toHaveProperty('created_at');
+        expect(result.body.articles[0]).toHaveProperty('votes');
+        expect(result.body.articles[0]).toHaveProperty('comment_count');
+        expect(result.body.articles.length).toBe(12);
+        expect(result.body.articles).toBeSortedBy('created_at', {ascending: true})
+        });
+    }); 
+    it.only('should respond with 200 and array of ordered articles if passed two queries: ascending order and sortby title', () => {
+        return request(app)
+        .get('/api/articles?order=asc&sortby=title')
+        .expect(200)
+        .then((result) => {
+        expect(Array.isArray(result.body.articles)).toBe(true);  
+        expect(result.body.articles).toBeSortedBy('title', {ascending: true})
+        });
+    });  
+    it.only('should respond with 200 and return articles from specified topic cats', () => {
         return request(app)
         .get("/api/articles?topic=cats")
         .expect(200)
         .then(({ body }) => {
             expect(body.articles.length).toBeGreaterThan(0);
-            body.articles.forEach((article) => {
-                expect(article.topic).toBe("cats");});
+            body.articles.forEach((articles) => {
+                expect(articles.topic).toBe('cats');});
         });
     }); 
-    it('should respond with 200 and return articles from specified topic mitch', () => {
+    it.only('should respond with 200 and return articles from specified topic mitch', () => {
         return request(app)
         .get("/api/articles?topic=mitch")
         .expect(200)
         .then(({ body }) => {
             expect(body.articles.length).toBeGreaterThan(0);
-            body.articles.forEach((article) => {
-                expect(article.topic).toBe("mitch");});
+            body.articles.forEach((articles) => {
+                expect(articles.topic).toBe('mitch');});
         });
     }); 
-    it('should respond with 404 if specified topic not found', () => {
-        return request(app)
-        .get("/api/articles?topic=roundabouts")
-        .expect(404)
-        .then((result) => {
-            expect(result.body).toEqual({ message: 'Topic not found'});
-        });
-    });
+    // it.only('should respond with 404 if specified topic not found', () => {
+    //     return request(app)
+    //     .get("/api/articles?topic=roundabouts")
+    //     .expect(404)
+    //     .then((result) => {
+    //         expect(result.body).toEqual({ message: 'Topic not found'});
+    //     });
+    // });
 }); 
 
 describe('GET ArticleId: api/articles/:article_id', () => {
