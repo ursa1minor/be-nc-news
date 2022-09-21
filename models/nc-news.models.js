@@ -12,8 +12,23 @@ exports.returnTopics = () => {
     });
 };
 
-exports.returnArticles = (topic) => {
-    let sqlQuery = 
+exports.returnArticles = 
+    (sortby = 'created_at', order = 'desc', topic) => {
+
+    const slugList = [];
+    const orderOptions = ['asc', 'desc', 'ASC', 'DESC']
+    const columns = ['title', 'author', 'created_at', 'topic', 'votes'];
+    let validTopic;
+
+    if (!columns.includes(sortby)) {
+		return Promise.reject({ status: 400, message: 'Bad request' });
+	}
+    if (!orderOptions.includes(order)) {
+		return Promise.reject({status: 400, message: 'Bad request'})
+	}
+
+    if(!topic) {
+        let sqlQuery = 
         `SELECT 
         COUNT (comments.article_id)::INT AS comment_count,
             articles.article_id, 
@@ -24,32 +39,53 @@ exports.returnArticles = (topic) => {
             articles.votes 
         FROM articles 
         LEFT JOIN comments 
-        ON articles.article_id = comments.article_id
+        ON articles.article_id = comments.article_id  
+        GROUP BY articles.article_id
+		ORDER BY ${sortby} ${order};
         `;
 
-    if (Object.keys(topic).length > 0) {
-        sqlQuery += 
-        `WHERE articles.topic = '${topic.topic}'
-        `;
-    }
-
-    sqlQuery += 
-		`GROUP BY articles.article_id
-		ORDER BY comment_count DESC;
-        `;
-
-    return db.query(sqlQuery)
+        return db.query(sqlQuery)
         .then((result) => {
             const articles = result.rows;
-
-    if (articles.length === 0) {
-        return Promise.reject({
-            status: 404, message: 'Topic not found'
-            });
+        return articles;})
+    }
+    else if (topic) {
+        return db.query(`SELECT slug FROM topics`)
+    
+        .then((topics) => {    
+        topics.rows.forEach(slug => slugList.push(slug.slug)) 
+        const topicMatch = slugList.filter(slug => (slug === topic))
+        console.log(topicMatch)
+    
+    if (topicMatch.length === 0) {
+        return Promise.reject({status: 404, message: 'Topic not found'})
         } else {
-        return articles;}
-    });
-};
+        let sqlQuery = 
+            `SELECT 
+            COUNT (comments.article_id)::INT AS comment_count,
+                articles.article_id, 
+                articles.author, 
+                articles.title, 
+                articles.topic, 
+                articles.created_at, 
+                articles.votes 
+            FROM articles 
+            LEFT JOIN comments 
+            ON articles.article_id = comments.article_id
+            WHERE articles.topic = '${topic}'
+            GROUP BY articles.article_id
+		    ORDER BY ${sortby} ${order};
+            `;
+
+        return db.query(sqlQuery)
+        .then((result) => {
+            const articles = result.rows;
+        return articles;})
+        }
+    })
+}
+}
+
 
 exports.returnArticleId = (article_id) => {
     let sqlQuery =  
