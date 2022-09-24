@@ -1,6 +1,10 @@
 const e = require('express');
 const db = require('../db/connection');
-const users = require('../db/data/test-data/users');
+const endpoints = require('../endpoints.json');
+
+exports.returnApi = () => {
+    return endpoints
+ };
 
 exports.returnTopics = () => {
 
@@ -257,6 +261,3 @@ exports.removeComment = (comment_id) => {
     })
 }
         
-
-
-
