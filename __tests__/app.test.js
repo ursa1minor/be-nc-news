@@ -358,7 +358,7 @@ describe('POST /api/articles/:article_id/comments', () => {
         .expect(400)
         .then((result) => {
             expect(result.body).toEqual({ message: 'Must include username and comment' })
-        })
+        });
     });
     it('should return status 422 if username not valid', () => {
         return request(app)
@@ -367,10 +367,38 @@ describe('POST /api/articles/:article_id/comments', () => {
         .expect(422)
         .then((result) => {
             expect(result.body).toEqual({ message: 'Username not found' })
-        })
+        });
     });
+});
 
+ describe('DELETE /api/comments/:comment_id', () => {
+    it('returns status 200 if request deleted', () => {
+          return request(app)
+            .delete("/api/comments/2")
+            .expect(200)
+            .then(({ body }) => {
+            expect(body.message).toBe('Comment deleted')
+        });
+    });
+    it('returns status 404 if comment_id does not exist', () => {
+        return request(app)
+            .delete("/api/comments/8000")
+            .expect(404)
+            .then(({ body }) => {
+            expect(body.message).toBe('Comment not found');
+        });
+    });
+    it('returns status 400 if id given is not a number', () => {
+        return request(app)
+            .delete('/api/comments/daffodil')
+            .expect(400)
+            .then(({ body }) => {
+            expect(body.message).toBe('Bad request');
+        })          
+    });
 })
+
+
 
 
 

@@ -1,4 +1,4 @@
-const { returnTopics, returnComments, returnArticles, returnArticleId, returnUsers, updateArticleId, insertComment } = require ('../models/nc-news.models.js');
+const { returnTopics, returnComments, returnArticles, returnArticleId, returnUsers, updateArticleId, insertComment, removeComment } = require ('../models/nc-news.models.js');
 
 exports.getTopics = (req, res, next) => {
     returnTopics().then((topics) => {
@@ -77,5 +77,28 @@ exports.postComment = (req, res, next) => {
         next(err);
       });
   };
+
+  exports.deleteComment = (req, res, next) => {
+    console.log(req.params.comment_id, "<- controller") //2
+    removeComment(req.params.comment_id)
+        .then((delComment) => {
+            res.status(200).send({message: 'Comment deleted'})
+        })
+        .catch((err) => {
+            next(err);
+        })
+  }
+
+//   exports.deleteCommentById = (req, res, next) => {
+//     console.log("inside deleteCommentById function in comments controller");
+//     const { comment_id } = req.params;
+//     removeComment(comment_id)
+//       .then((deleteCount) => {
+//         res.status(204).send();
+//       })
+//       .catch((err) => {
+//         next(err);
+//       });
+//   };
 
 
