@@ -2,8 +2,12 @@ const e = require('express');
 const db = require('../db/connection');
 const endpoints = require('../endpoints.json');
 
+exports.returnLandingPage = () => {
+    return landingPage;
+};
+
 exports.returnApi = () => {
-    return endpoints
+    return endpoints;
  };
 
 exports.returnTopics = () => {
