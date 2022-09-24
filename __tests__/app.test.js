@@ -239,8 +239,6 @@ describe('GET Users: api/users', () => {
     });  
 });
 
-
-
 describe('PATCH article_id: api/articles/:article_id', () => {
     it('should update the article vote property by given amount which is a positive number', () => {
         const testInput = {inc_votes: 10}

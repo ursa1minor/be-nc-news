@@ -55,7 +55,6 @@ exports.returnArticles =
         .then((topics) => {    
         topics.rows.forEach(slug => slugList.push(slug.slug)) 
         const topicMatch = slugList.filter(slug => (slug === topic))
-        console.log(topicMatch)
     
     if (topicMatch.length === 0) {
         return Promise.reject({status: 404, message: 'Topic not found'})
@@ -202,11 +201,4 @@ exports.insertComment = ( article_id, username, body ) => {
     return comment;
     });
 };
-
-
-
-
-
-
-
 
