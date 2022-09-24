@@ -1,9 +1,4 @@
-const { returnLandingPage, returnApi, returnTopics, returnComments, returnArticles, returnArticleId, returnUsers, updateArticleId, insertComment, removeComment } = require ('../models/nc-news.models.js');
-
-exports.getLandingPage = (req, res, next) => {
-    const landingPage = returnLandingPage()
-    res.status(200).send(landingPage)
-}
+const { returnApi, returnTopics, returnComments, returnArticles, returnArticleId, returnUsers, updateArticleId, insertComment, removeComment } = require ('../models/nc-news.models.js');
 
 exports.getApi = (req, res, next) => {
     const endpoints = returnApi()
