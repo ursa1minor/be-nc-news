@@ -1,27 +1,111 @@
 {
-  "GET /api": {
-    "description": "serves up a json representation of all the available endpoints of the api"
-  },
-  "GET /api/topics": {
-    "description": "serves an array of all topics",
-    "queries": [],
-    "exampleResponse": {
-      "topics": [{ "slug": "football", "description": "Footie!" }]
-    }
-  },
-  "GET /api/articles": {
-    "description": "serves an array of all topics",
-    "queries": ["author", "topic", "sort_by", "order"],
-    "exampleResponse": {
-      "articles": [
-        {
-          "title": "Seafood substitutions are increasing",
-          "topic": "cooking",
-          "author": "weegembump",
-          "body": "Text from the article..",
-          "created_at": 1527695953341
+    "GET /api": {
+      "description": "serves up a json representation of all the available endpoints of the api"
+    },
+    "GET /api/users": {
+        "description": "serves an array of users",
+        "queries": [],
+        "exampleResponse": {
+          "users": [
+            {
+              "username": "butter_bridge",
+              "name": "jonny",
+              "avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+            }
+          ]
+        }   
+      },
+    "GET /api/topics": {
+      "description": "serves an array of all topics",
+      "queries": [],
+      "exampleResponse": {
+        "topics": [{ "slug": "football", "description": "Footie!" }]
+      }
+    },
+    "GET /api/articles": {
+      "description": "serves an array of all topics",
+      "queries": ["author", "topic", "sort_by", "order"],
+      "exampleResponse": {
+        "articles": [
+          {
+            "title": "Seafood substitutions are increasing",
+            "topic": "cooking",
+            "author": "weegembump",
+            "body": "Text from the article..",
+            "created_at": 1527695953341
+          }
+        ]
+      }
+    },
+    "GET /api/articles/:article_id": {
+        "description": "serves an article object by id",
+        "queries": [],
+        "exampleResponse": {
+          "article": 
+            {
+              "article_id": 1,
+              "title": "Incessant use of autotune",
+              "topic": "aesthetics",
+              "author": "womble",
+              "body": "Text from the article..",
+              "created_at": 1527695953341,
+              "votes": 100
+            }
         }
-      ]
-    }
+      },
+      "GET /api/articles/:article_id/comments": {
+        "description": "serves an array of comments by article_id",
+        "queries": [],
+        "exampleResponse": {
+          "comments": [
+            {
+              "comment_id": 3,
+              "body": "Whoops!",
+              "article_id": 4,
+              "author": "Snoopy",
+              "votes": 10,
+              "created_at": 1527695953341,
+              "comment_count": 5
+            }
+          ]
+        }   
+      }, 
+    "PATCH /api/articles/:article_id": {
+    "description": "increments or decrements article's vote property by 1",
+    "queries": [],
+      "exampleResponse": {
+        "article": 
+          {
+            "article_id": 14,
+            "title": "Peanut soup",
+            "topic": "cooking",
+            "author": "orangey-red",
+            "body": "Text from the article..",
+            "created_at": 1527695953341,
+            "votes": 11
+          }
+      }
+    },
+    "POST /api/articles/:article_id": {
+          "description": "posts new article",
+          "queries": [],
+          "exampleResponse": {
+            "article": 
+              {
+                "article_id": 1,
+                "title": "Seafood substitutions are increasing",
+                "topic": "cooking",
+                "author": "weegembump",
+                "body": "Text from the article..",
+                "created_at": 1527695953341,
+                "votes": 0
+              }
+        }
+    }, 
+    "DELETE /api/comments/:comment_id": {
+    "description": "deletes a comment by id",
+      "queries": [],
+      "exampleResponse": 
+          { "message": "Comment deleted"}
+      }  
   }
-}
