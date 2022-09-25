@@ -12,7 +12,7 @@ afterAll(() => {
     return db.end();
 });
 
-describe('GET /', () => {
+describe.only('GET /', () => {
     it('should respond with 200 and html file listing endpoints', () => {
         return request(app)
         .get('/')
@@ -20,7 +20,7 @@ describe('GET /', () => {
     })
 })
 
-describe('GET api', () => {
+describe.only('GET api', () => {
     it('should respond with 200 and JSON file listing endpoints', () => {
         return request(app)
         .get('/api')
@@ -32,7 +32,7 @@ describe('GET api', () => {
     })
 })
 
-describe('GET Topics: api/topics', () => {
+describe.only('GET Topics: api/topics', () => {
     it('should respond with 200 if array of objects with correct properties found', () => {
         return request(app)
         .get('/api/topics')
@@ -54,7 +54,7 @@ describe('GET Topics: api/topics', () => {
     }); 
 });
 
-describe('GET Articles: api/articles', () => {
+describe.only('GET Articles: api/articles', () => {
     it('should respond with 200 if array of article objects found with properties title, topic, author, created_at, votes and comment_count, with created_at in descending order', () => {
         return request(app)
         .get('/api/articles')
@@ -150,7 +150,7 @@ describe('GET Articles: api/articles', () => {
     });
 }); 
 
-describe('GET ArticleId: api/articles/:article_id', () => {
+describe.only('GET ArticleId: api/articles/:article_id', () => {
     it('should respond with 200 if object found with correct comment count', () => {
         return request(app)
         .get('/api/articles/1')
@@ -199,7 +199,7 @@ describe('GET ArticleId: api/articles/:article_id', () => {
     });
 });
 
-describe('GET Comments: /api/articles/:article_id/comments', () => {
+describe.only('GET Comments: /api/articles/:article_id/comments', () => {
     it('should respond with 200 if comments found', () => {
         return request(app)
         .get('/api/articles/1/comments')
@@ -238,7 +238,7 @@ describe('GET Comments: /api/articles/:article_id/comments', () => {
     })
 });
 
-describe('GET Users: api/users', () => {
+describe.only('GET Users: api/users', () => {
     it('should return array of users', () => {
         return request(app)
         .get('/api/users')
@@ -260,7 +260,7 @@ describe('GET Users: api/users', () => {
     });  
 });
 
-describe('PATCH article_id: api/articles/:article_id', () => {
+describe.only('PATCH article_id: api/articles/:article_id', () => {
     it('should update the article vote property by given amount which is a positive number', () => {
         const testInput = {inc_votes: 10}
         return request(app)
@@ -348,7 +348,7 @@ describe('PATCH article_id: api/articles/:article_id', () => {
     });
 });
 
-describe('POST /api/articles/:article_id/comments', () => {
+describe.only('POST /api/articles/:article_id/comments', () => {
     it('should return status 201 and post a comment', () => {
         return request(app)
         .post("/api/articles/2/comments")
@@ -393,7 +393,7 @@ describe('POST /api/articles/:article_id/comments', () => {
     });
 });
 
-describe('DELETE /api/comments/:comment_id', () => {
+describe.only('DELETE /api/comments/:comment_id', () => {
     it('returns status 200 if request deleted', () => {
           return request(app)
             .delete("/api/comments/2")

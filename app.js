@@ -1,22 +1,9 @@
 const express = require("express");
 const app = express();
 app.use(express.json()); //parse req.body
+const apiRouter = require("./routes/api-router");
 
-const { getRoot, getApi } = require('./controllers/api-controller');
-
-// Routers
-const articlesRouter = require("./routes/articles-router");
-const commentsRouter = require("./routes/comments-router");
-const topicsRouter = require("./routes/topics-router");
-const usersRouter = require("./routes/users-router");
-
-app.use("/api/articles", articlesRouter);
-app.use("/api/comments", commentsRouter);
-app.use("/api/topics", topicsRouter);
-app.use("/api/users", usersRouter);
-
-app.get('/', getRoot);
-app.get('/api', getApi);
+app.use("/", apiRouter);
 
 // 404 table not found / id arg not found getComments
 app.all('/*', (req, res, next) => {
