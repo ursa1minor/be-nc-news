@@ -1,30 +1,22 @@
 const express = require("express");
-
-const { getRoot, getApi, getTopics, getComments, getArticles, getArticleId, getUsers, patchArticleId, postComment, deleteComment } = require('./controllers/nc-news.controllers.js');
-
 const app = express();
+app.use(express.json()); //parse req.body
 
-app.use(express.json());
+const { getRoot, getApi } = require('./controllers/api-controller');
+
+// Routers
+const articlesRouter = require("./routes/articles-router");
+const commentsRouter = require("./routes/comments-router");
+const topicsRouter = require("./routes/topics-router");
+const usersRouter = require("./routes/users-router");
+
+app.use("/api/articles", articlesRouter);
+app.use("/api/comments", commentsRouter);
+app.use("/api/topics", topicsRouter);
+app.use("/api/users", usersRouter);
 
 app.get('/', getRoot);
-
 app.get('/api', getApi);
-
-app.get('/api/topics', getTopics);
-
-app.get('/api/articles', getArticles);
-
-app.get(`/api/articles/:article_id`, getArticleId);
-
-app.get('/api/articles/:article_id/comments', getComments);
-
-app.get('/api/users', getUsers);
-
-app.patch('/api/articles/:article_id', patchArticleId);
-
-app.post('/api/articles/:article_id/comments', postComment);
-
-app.delete('/api/comments/:comment_id', deleteComment);
 
 // 404 table not found / id arg not found getComments
 app.all('/*', (req, res, next) => {
