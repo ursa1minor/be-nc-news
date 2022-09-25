@@ -1,4 +1,8 @@
-const { returnApi, returnTopics, returnComments, returnArticles, returnArticleId, returnUsers, updateArticleId, insertComment, removeComment } = require ('../models/nc-news.models.js');
+const { returnRoot, returnApi, returnTopics, returnComments, returnArticles, returnArticleId, returnUsers, updateArticleId, insertComment, removeComment } = require ('../models/nc-news.models.js');
+
+exports.getRoot = (req, res, next) => {
+    res.status(200).send({ message: "Welcome to Northcoders News API"})
+}
 
 exports.getApi = (req, res, next) => {
     const endpoints = returnApi()
@@ -6,17 +10,17 @@ exports.getApi = (req, res, next) => {
 }
 
 exports.getTopics = (req, res, next) => {
-    returnTopics().then((topics) => {
-        res.status(200).send({ topics });
+    returnTopics()
+        .then((topics) => {
+    res.status(200).send({ topics });
     })   
 }
 
 exports.getArticles = (req, res, next) => {
-	//const topic = req.query;
+
     const { sortby, order, topic } = req.query;
     returnArticles(sortby, order, topic)
-	//returnArticles(topic)
-		.then((articles) => {
+	    .then((articles) => {
 		    res.status(200).send({ articles });
 		})
 		.catch((err) => {
@@ -48,8 +52,9 @@ exports.getComments = (req, res, next) => {
 }
 
 exports.getUsers = (req, res, next) => {
-    returnUsers().then((users) => {
-        res.status(200).send({ users });
+    returnUsers()
+        .then((users) => {
+            res.status(200).send({ users });
     })
 }
 

@@ -12,6 +12,14 @@ afterAll(() => {
     return db.end();
 });
 
+describe('GET /', () => {
+    it('should respond with 200 and html file listing endpoints', () => {
+        return request(app)
+        .get('/')
+        .expect(200)
+    })
+})
+
 describe('GET api', () => {
     it('should respond with 200 and JSON file listing endpoints', () => {
         return request(app)
