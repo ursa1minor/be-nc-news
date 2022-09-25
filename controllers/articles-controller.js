@@ -1,20 +1,4 @@
-const { returnRoot, returnApi, returnTopics, returnComments, returnArticles, returnArticleId, returnUsers, updateArticleId, insertComment, removeComment } = require ('../models/nc-news.models.js');
-
-exports.getRoot = (req, res, next) => {
-    res.status(200).send({ message: "Welcome to Northcoders News API"})
-}
-
-exports.getApi = (req, res, next) => {
-    const endpoints = returnApi()
-    res.status(200).send(endpoints)
-}
-
-exports.getTopics = (req, res, next) => {
-    returnTopics()
-        .then((topics) => {
-    res.status(200).send({ topics });
-    })   
-}
+const { returnArticles, returnArticleId, updateArticleId, returnComments, insertComment } = require ('../models/articles-model.js');
 
 exports.getArticles = (req, res, next) => {
 
@@ -37,26 +21,9 @@ exports.getArticleId = (req, res, next) => {
     })
     .catch( (err) => {
         next(err)
-    })
-}
+    });
+};
 
-exports.getComments = (req, res, next) => {
-    const article_id = req.params.article_id;
-    returnComments( article_id )
-        .then((comments) => {
-           res.status(200).send({ comments });
-    })
-    .catch( (err) => {
-        next(err)
-    })
-}
-
-exports.getUsers = (req, res, next) => {
-    returnUsers()
-        .then((users) => {
-            res.status(200).send({ users });
-    })
-}
 
 exports.patchArticleId = (req, res, next) => {
     const { inc_votes } = req.body
@@ -71,8 +38,19 @@ exports.patchArticleId = (req, res, next) => {
     })
     .catch( (err) => {
         next(err)
+    });
+};
+
+exports.getComments = (req, res, next) => {
+    const article_id = req.params.article_id;
+    returnComments( article_id )
+        .then((comments) => {
+           res.status(200).send({ comments });
     })
-}
+    .catch( (err) => {
+        next(err)
+    });
+};
 
 exports.postComment = (req, res, next) => {
     const { username } = req.body; 
@@ -87,15 +65,3 @@ exports.postComment = (req, res, next) => {
         next(err);
       });
   };
-
-  exports.deleteComment = (req, res, next) => {
-    removeComment(req.params.comment_id)
-        .then((delComment) => {
-            res.status(200).send({message: 'Comment deleted'})
-        })
-        .catch((err) => {
-            next(err);
-        })
-  }
-
-
