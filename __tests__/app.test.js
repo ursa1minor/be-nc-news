@@ -12,7 +12,7 @@ afterAll(() => {
     return db.end();
 });
 
-describe.only('GET /', () => {
+describe('GET /', () => {
     it('should respond with 200 and html file listing endpoints', () => {
         return request(app)
         .get('/')
@@ -20,7 +20,7 @@ describe.only('GET /', () => {
     })
 })
 
-describe.only('GET api', () => {
+describe('GET api', () => {
     it('should respond with 200 and JSON file listing endpoints', () => {
         return request(app)
         .get('/api')
@@ -32,7 +32,7 @@ describe.only('GET api', () => {
     })
 })
 
-describe.only('GET Topics: api/topics', () => {
+describe('GET Topics: api/topics', () => {
     it('should respond with 200 if array of objects with correct properties found', () => {
         return request(app)
         .get('/api/topics')
@@ -44,17 +44,17 @@ describe.only('GET Topics: api/topics', () => {
         expect(result.body.topics.length).toBe(3);
         });
     });  
-    it('should generate 404 if items not found', () => {
+    it('should generate 404 if topic not found', () => {
         return request(app)
         .get('/api/notTopics')
         .expect(404)
         .then((result) => {
-        expect(result.body).toEqual({ message: 'Item not found' });
+        expect(result.body).toEqual({ message: 'Result not found' });
         }); 
     }); 
 });
 
-describe.only('GET Articles: api/articles', () => {
+describe('GET Articles: api/articles', () => {
     it('should respond with 200 if array of article objects found with properties title, topic, author, created_at, votes and comment_count, with created_at in descending order', () => {
         return request(app)
         .get('/api/articles')
@@ -76,7 +76,7 @@ describe.only('GET Articles: api/articles', () => {
         .get('/api/notArticles')
         .expect(404)
         .then((result) => {
-    expect(result.body).toEqual({ message: 'Item not found' });
+    expect(result.body).toEqual({ message: 'Result not found' });
         });
     }); 
     it('should respond with 200 and array of ordered articles if passed single query: ascending order', () => {
@@ -150,7 +150,7 @@ describe.only('GET Articles: api/articles', () => {
     });
 }); 
 
-describe.only('GET ArticleId: api/articles/:article_id', () => {
+describe('GET ArticleId: api/articles/:article_id', () => {
     it('should respond with 200 if object found with correct comment count', () => {
         return request(app)
         .get('/api/articles/1')
@@ -199,7 +199,7 @@ describe.only('GET ArticleId: api/articles/:article_id', () => {
     });
 });
 
-describe.only('GET Comments: /api/articles/:article_id/comments', () => {
+describe('GET Comments: /api/articles/:article_id/comments', () => {
     it('should respond with 200 if comments found', () => {
         return request(app)
         .get('/api/articles/1/comments')
@@ -233,12 +233,12 @@ describe.only('GET Comments: /api/articles/:article_id/comments', () => {
         .get('/api/articles/2/celery')
         .expect(404)
         .then ((result) => {
-        expect(result.body).toEqual({message: 'Item not found'}) 
+        expect(result.body).toEqual({message: 'Result not found'}) 
         });
     })
 });
 
-describe.only('GET Users: api/users', () => {
+describe('GET Users: api/users', () => {
     it('should return array of users', () => {
         return request(app)
         .get('/api/users')
@@ -250,17 +250,38 @@ describe.only('GET Users: api/users', () => {
         expect(result.body.users[0]).toHaveProperty('avatar_url');
         });
     });
-    it('should generate 404 if item not found', () => {
+    it('should generate 404 if user not found', () => {
         return request(app)
         .get('/api/notUsers')
         .expect(404)
         .then((result) => {
-        expect(result.body).toEqual({ message: 'Item not found' });
+        expect(result.body).toEqual({ message: 'Result not found' });
         }); 
     });  
 });
 
-describe.only('PATCH article_id: api/articles/:article_id', () => {
+describe('GET UserByUsername: api/users:username', () => {
+    it('should return a user by username', () => {
+        return request(app)
+        .get('/api/users/lurker')
+        .expect(200)
+        .then((result) => {
+        expect(result.body.user).toHaveProperty('username');
+        expect(result.body.user).toHaveProperty('name');
+        expect(result.body.user).toHaveProperty('avatar_url');
+        });
+    });
+    it('should generate 404 if item not found', () => {
+        return request(app)
+        .get('/api/users/notUser')
+        .expect(404)
+        .then((result) => {
+        expect(result.body).toEqual({ message: 'User not found' });
+        }); 
+    });  
+})
+
+describe('PATCH article_id: api/articles/:article_id', () => {
     it('should update the article vote property by given amount which is a positive number', () => {
         const testInput = {inc_votes: 10}
         return request(app)
@@ -348,7 +369,7 @@ describe.only('PATCH article_id: api/articles/:article_id', () => {
     });
 });
 
-describe.only('POST /api/articles/:article_id/comments', () => {
+describe('POST /api/articles/:article_id/comments', () => {
     it('should return status 201 and post a comment', () => {
         return request(app)
         .post("/api/articles/2/comments")
@@ -382,18 +403,18 @@ describe.only('POST /api/articles/:article_id/comments', () => {
         expect(result.body).toEqual({ message: 'Must include username and comment' })
         });
     });
-    it('should return status 422 if username not valid', () => {
+    it('should return status 404 if username not valid', () => {
         return request(app)
         .post("/api/articles/3/comments")
         .send({ username: 'Albert', body: 'Phew'})
-        .expect(422)
+        .expect(404)
         .then((result) => {
         expect(result.body).toEqual({ message: 'Username not found' })
         });
     });
 });
 
-describe.only('DELETE /api/comments/:comment_id', () => {
+describe('DELETE /api/comments/:comment_id', () => {
     it('returns status 200 if request deleted', () => {
           return request(app)
             .delete("/api/comments/2")

@@ -163,7 +163,7 @@ exports.insertComment = ( article_id, username, body ) => {
     .then((result) => {
         const users = result.rows;
     if (users.length < 1) {
-        return Promise.reject({ status: 422, message: 'Username not found' });
+        return Promise.reject({ status: 404, message: 'Username not found' });
         }
     })
     .then(() => {
