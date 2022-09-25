@@ -8,7 +8,7 @@ The database, which was provided by Northcoders, comprises users, articles, topi
 
 Responding to an ordered series of Kanban tickets, I created endpoints which may be used to interact with the database. 
 
-The endpoints were developed using a Test Driven Development workflow, i.e. tests were written first, red-green refactoring was carried out and app.js, controller.js and model.js were updated in response to the test feedback. 
+Endpoints were developed using a Test Driven Development workflow: tests were written first, red-green refactoring was carried out and app.js, controller.js and model.js were updated in response to the test feedback. Express routers were employed.
 
 The endpoints.json file provides a list of available endpoints, plus example responses.
 
