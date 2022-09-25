@@ -19,7 +19,7 @@ apiRouter.use("/api/users", usersRouter);
 
 // 404 table not found / id arg not found getComments
 apiRouter.all('/*', (req, res, next) => {
-  res.status(404).send({message: 'Item not found'})
+  res.status(404).send({message: 'Result not found'})
 })
 
 // 404 item not found
