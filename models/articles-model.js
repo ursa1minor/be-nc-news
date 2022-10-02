@@ -129,7 +129,9 @@ exports.returnComments = (article_id) => {
             articles.article_id    
         FROM comments
         RIGHT JOIN articles ON comments.article_id=articles.article_id
-        WHERE articles.article_id = $1`;
+        WHERE articles.article_id = $1
+        ORDER BY created_at DESC
+        `;
 
     return db.query(sqlQuery, [article_id])
         .then((result) => {
