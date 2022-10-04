@@ -6,10 +6,12 @@ const commentsRouter = require("./comments-router");
 const topicsRouter = require("./topics-router");
 const usersRouter = require("./users-router");
 
-const { getRoot, getApi } = require("../controllers/api-controller");
+// const { getRoot, getApi } = require("../controllers/api-controller");
+
+const { getApi } = require("../controllers/api-controller");
 
 apiRouter.use(express.json());
-apiRouter.route("/").get(getRoot);
+//apiRouter.route("/").get(getRoot);
 apiRouter.route("/api").get(getApi)
 
 apiRouter.use("/api/articles", articlesRouter);
