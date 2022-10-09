@@ -1,4 +1,4 @@
-Welcome to Ursula's Northcoders News API, hosted on Heroku at https://ursula-nc.herokuapp.com/api
+Welcome to my version of Northcoders News API, hosted on Heroku at https://ursula-nc.herokuapp.com/api
 
 Project Description:
 
